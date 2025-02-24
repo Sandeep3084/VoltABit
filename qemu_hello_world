@@ -1,0 +1,18 @@
+MOV SI, message  
+MOV AH, 0x0E  
+.loop:
+    LODSB       
+    TEST AL, AL   
+    JZ done      
+    INT 0x10     
+    JMP .loop    
+done:
+    HLT         
+
+message DB "Hello, World!", 0  
+
+#run with command 
+nasm -f bin hello.asm -o hello.bin
+qemu-system-x86_64 -drive format=raw,file=hello.bin
+
+
