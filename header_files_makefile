@@ -1,0 +1,56 @@
+#Makefiles
+
+#Goal is to compile two different header files a.h and b.h and for qemu to recognize it as two different .c files (a.c and b.c)
+
+#a.c
+#include <stdio.h>
+#include "a.h"
+#include "c.h"
+
+void functionA(){
+printf("Function A\n");
+}
+
+int main(){
+functionA();
+return 0;
+}
+
+#b.c
+include <stdio.h>
+#include "b.h"
+void functionB(){
+printf("Function B\n");
+}
+int main(){
+functionB();
+return 0;
+}
+
+
+#nano Makefile
+CC = gcc
+CFLAGS = -Wall -Wextra -MMD -MP
+SRC=a.c b.c
+OBJ=$(SRC: .c=.o)
+DEP=$(SRC: .o=.d)
+all: program_a program_b
+
+program_a: a.o
+        $(CC) $(CFLAGS) -o program_a a.o
+
+program_b: b.o
+        $(CC) $(CFLAGS) -o program_b b.o
+
+a.o: a.c
+        $(CC) $(CFLAGS) -c a.c -o a.o
+
+b.o: b.c
+        $(CC) $(CFLAGS) -c b.c -o b.o
+
+clean:
+        rm -f *.o program_a program_b
+
+#compile using
+gcc -Wall -Wextra a.c -o program
+./program
